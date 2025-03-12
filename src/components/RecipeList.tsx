@@ -67,7 +67,7 @@ const RecipeList: React.FC<RecipeListProps> = ({ activeBmiCategory }) => {
                 <SelectValue placeholder="Filter by tag" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All tags</SelectItem>
+                <SelectItem value="all">All tags</SelectItem>
                 {uniqueTags.map((tag) => (
                   <SelectItem key={tag} value={tag}>
                     {tag}

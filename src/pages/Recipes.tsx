@@ -22,7 +22,7 @@ const Recipes = () => {
   const bmiCategories: BmiCategory[] = ["underweight", "normal", "overweight", "obese"];
   
   const handleCategoryChange = (value: string) => {
-    if (value === "") {
+    if (value === "all") {
       setActiveBmiCategory(undefined);
       localStorage.removeItem('bmiCategory');
     } else {
@@ -44,14 +44,14 @@ const Recipes = () => {
             </div>
             <div className="w-full md:w-auto">
               <Select
-                value={activeBmiCategory || ""}
+                value={activeBmiCategory || "all"}
                 onValueChange={handleCategoryChange}
               >
                 <SelectTrigger className="w-full md:w-[200px]">
                   <SelectValue placeholder="Filter by BMI category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All recipes</SelectItem>
+                  <SelectItem value="all">All recipes</SelectItem>
                   {bmiCategories.map((category) => (
                     <SelectItem key={category} value={category}>
                       {getBmiCategoryLabel(category)}
