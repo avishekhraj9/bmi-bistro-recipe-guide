@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Card, 
   CardContent, 
@@ -85,9 +86,9 @@ const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, activeBmiCategory }) =>
       </CardContent>
       
       <CardFooter className="pt-0 mt-auto">
-        <button className="text-sm font-medium text-primary hover:underline transition-all">
+        <Link to={`/recipe/${recipe.id}`} className="text-sm font-medium text-primary hover:underline transition-all">
           View Recipe
-        </button>
+        </Link>
       </CardFooter>
     </Card>
   );
