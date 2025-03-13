@@ -2,6 +2,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { LogIn, UserPlus } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -39,24 +41,38 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </Link>
             ))}
           </nav>
-          <div className="md:hidden">
-            {/* Mobile menu button */}
-            <button className="p-2 rounded-md hover:bg-secondary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
+          <div className="flex items-center space-x-2">
+            <Link to="/login">
+              <Button variant="outline" size="sm" className="hidden md:flex">
+                <LogIn className="mr-2 h-4 w-4" />
+                Log in
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button size="sm" className="hidden md:flex">
+                <UserPlus className="mr-2 h-4 w-4" />
+                Sign up
+              </Button>
+            </Link>
+            <div className="md:hidden">
+              {/* Mobile menu button */}
+              <button className="p-2 rounded-md hover:bg-secondary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </header>
