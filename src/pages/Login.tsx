@@ -1,6 +1,6 @@
 
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,9 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
 import { Mail, Lock } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -23,6 +23,8 @@ const formSchema = z.object({
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, signIn } = useAuth();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -32,18 +34,21 @@ const Login = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // In a real application, you would validate credentials here
-    console.log(values);
-    
-    // Show success message
-    toast({
-      title: "Login successful!",
-      description: "Welcome back to NutriGuide.",
-    });
-    
-    // Redirect to home page
-    navigate("/");
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      const from = location.state?.from || "/";
+      navigate(from);
+    }
+  }, [user, navigate, location]);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await signIn(values.email, values.password);
+    } catch (error) {
+      console.error("Login error:", error);
+      // Error is handled in the auth context
+    }
   }
 
   return (

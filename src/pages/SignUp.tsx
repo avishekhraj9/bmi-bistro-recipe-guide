@@ -1,6 +1,6 @@
 
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,9 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { toast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
 import { User, Mail, Lock } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -30,6 +30,8 @@ const formSchema = z.object({
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, signUp } = useAuth();
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,18 +43,21 @@ const SignUp = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // In a real application, you would send this data to a backend
-    console.log(values);
-    
-    // Show success message
-    toast({
-      title: "Account created!",
-      description: "You've successfully signed up for NutriGuide.",
-    });
-    
-    // Redirect to login page
-    navigate("/login");
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      const from = location.state?.from || "/";
+      navigate(from);
+    }
+  }, [user, navigate, location]);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await signUp(values.email, values.password, values.name);
+    } catch (error) {
+      console.error("Signup error:", error);
+      // Error is handled in the auth context
+    }
   }
 
   return (

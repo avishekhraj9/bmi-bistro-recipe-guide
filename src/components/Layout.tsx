@@ -3,7 +3,8 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { LogIn, UserPlus } from "lucide-react";
+import { LogIn, UserPlus, LogOut, User } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
+  const { user, signOut } = useAuth();
   
   const navItems = [
     { path: "/", label: "Home" },
@@ -42,18 +44,35 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             ))}
           </nav>
           <div className="flex items-center space-x-2">
-            <Link to="/login">
-              <Button variant="outline" size="sm" className="hidden md:flex">
-                <LogIn className="mr-2 h-4 w-4" />
-                Log in
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button size="sm" className="hidden md:flex">
-                <UserPlus className="mr-2 h-4 w-4" />
-                Sign up
-              </Button>
-            </Link>
+            {user ? (
+              <>
+                <Link to="/profile">
+                  <Button variant="outline" size="sm" className="hidden md:flex">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </Button>
+                </Link>
+                <Button variant="outline" size="sm" className="hidden md:flex" onClick={() => signOut()}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Log out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="outline" size="sm" className="hidden md:flex">
+                    <LogIn className="mr-2 h-4 w-4" />
+                    Log in
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button size="sm" className="hidden md:flex">
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    Sign up
+                  </Button>
+                </Link>
+              </>
+            )}
             <div className="md:hidden">
               {/* Mobile menu button */}
               <button className="p-2 rounded-md hover:bg-secondary">
